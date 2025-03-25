@@ -1,14 +1,7 @@
 import cv2 as cv
 from mtcnn import MTCNN 
 import os
-
-# for identifying faces
-mt = MTCNN()
-
-# automic list of people who have registered
-DIR = r'/home/aayushi/fv2/dataset'
-registered = os.listdir(DIR)
-
+from commons import validate_username, registered, mt
 
 # register the name with photo
 def register_user(username):
@@ -31,7 +24,6 @@ def register_user(username):
 
         # detect faces
         faces = mt.detect_faces(frame)
-
         for face in faces:
             x, y, w, h = face['box']
 
@@ -60,8 +52,9 @@ def register_user(username):
 
 
 if __name__ == "__main__":
-    user = input("Enter your Name : ").strip().lower()
-    if user not in registered:
-        register_user(user)
-    else:
-        print("User data already exists!!!")
+    user = input("Enter your Name : ").lower()
+    if validate_username(user):
+        if user not in registered:
+            register_user(user)
+        else:
+            print("User data already exists!!!")
